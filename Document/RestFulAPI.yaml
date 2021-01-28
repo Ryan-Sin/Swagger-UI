@@ -1,0 +1,267 @@
+openapi: 3.0.0
+info:
+  version: '1.0.0'
+  title: '개발이 취미인 남자'
+  description: '프로젝트 설명 RestFul Api 클라이언트 UI 로컬 서버를 구동 후 요청해주세요.'
+
+#내가 요청하고 싶은 서버 url 설정 다수로 설정가능
+servers:
+- description: "유저 등록 API"
+  url: http://localhost:3000/api
+- description: "파일 업로드 API"
+  url: http://localhost:3000
+
+# API 요청 경로 및 데이터 세팅
+paths:
+  /users:
+    get:
+      summary: "유저 데이터 전체조회"
+      description: "서버에 데이터를 보내지 않고 Get방식으로 요청"
+      tags:
+        - Get 방식
+      responses:
+        '200':
+          description: 전체 유저 정보
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  users:
+                    type: object
+                    example: [{ "id": 1, "name": "유저1" },
+                              { "id": 2, "name": "유저2" },
+                              { "id": 3, "name": "유저3" }]
+
+  /users/{user_id}:
+    get:
+      summary: "특정 유저조회 Path 방식"
+      description: "요청 경로에 값을 담아 서버에 보낸다."
+      tags:
+        - Get 방식
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          description: 유저 아이디
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 조회)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  users:
+                    type: object
+                    example: [{ "id": 1, "name": "유저1" }]
+
+  /users/user?user_id={user_id}:
+    get:
+      summary: "특정 유저조회 Query 방식"
+      description: "요청 경로에 값을 담아 서버에 보낸다."
+      tags:
+        - Get 방식
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          description: 유저 아이디
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 조회)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  users:
+                    type: object
+                    example: [{ "id": 1, "name": "유저1" }]
+
+  /users/add:
+      post:
+        summary: "유저 등록"
+        description: "POST 방식으로 유저를 등록한다."
+        tags:
+          - Post 방식      
+        requestBody:
+          description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 등록)
+          required: true
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: "유저 고유아이디"
+                  name:
+                    type: string
+                    description: "유저 이름"
+        responses:
+          '200':
+            description: 유저 등록 성공
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    ok:
+                      type: boolean
+                    data:
+                      type: object
+                      example: [{ "id": 1, "name": "유저1" },
+                                { "id": 2, "name": "유저2" },
+                                { "id": 3, "name": "유저3" },
+                                { "id": 4, "name": "유저4" }]
+  /users/update:
+    put:
+      summary: "유저 수정"
+      description: "PUT 방식을 통해 유저 수정(전체 데이터를 수정할 때 사용함)"
+      tags:
+        - Put 방식
+      requestBody:
+        description: 유저 수정
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: int
+                  description: "유저 고유아이디"
+                name:
+                  type: string
+                  description: "유저 이름"
+      responses:
+        '200':
+          description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다.(유저 수정)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  data:
+                    type: string
+                    example: [{ "id": 1, "name": "유저1" },
+                              { "id": 2, "name": "유저2" },
+                              { "id": 3, "name": "유저3" }]
+
+  /user/update/{user_id}:
+    patch:
+      summary: "유저 수정"
+      description: "Patch 방식을 통해 특정 유저 수정(단일 데이터를 수정할 때 사용함)"
+      tags:
+        - Patch 방식
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          description: 유저 아이디
+          schema:
+            type: string
+      requestBody:
+        description: 유저 수정
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: "유저 이름"
+      responses:
+        '200':
+          description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 수정)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  data:
+                    type: string
+                    example: [{ "id": 1, "name": "유저1" },
+                              { "id": 2, "name": "유저2" },
+                              { "id": 3, "name": "유저3" }]
+
+  /user/delete:
+    delete:
+      summary: "특정 유저 삭제"
+      description: "요청 경로에 값을 담아 서버에 보낸다."
+      tags:
+        - Delete 방식
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          description: 유저 아이디
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 삭제)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  users:
+                    type: object
+                    example: [{ "id": 1, "name": "유저1" },
+                              { "id": 2, "name": "유저2" },
+                              { "id": 3, "name": "유저3" }]
+
+  /multipart/upload:
+    post:
+      summary: 파일 업로드
+      description: 파일 업로드 서버로 전송해주세요.
+      tags:
+        - multipart/form-data Post 파일업로드
+      requestBody:
+        description: "파일 업로드"
+        required: true
+        content: 
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: "파일 이름"
+                file:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '200':
+          description: 파일 업로드 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  data:
+                    type: string
+                    example: Multipart Upload Ok
